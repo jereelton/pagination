@@ -1,105 +1,121 @@
 
-function getData(index) {
+function createPagination(pages, page) {
 
-    $.ajax({
-        type: "GET",
-        url: "http://localhost/testes/pagination/config.php",
-        data: "pagina="+index,
-        dataType: "json"
-    }).done(function(result){
+    var style    = '';
+    var dataList = '\
+        <li class="page-item">\
+          <a data-link-pag-first aria-label="Previous" class="page-link">\
+            <span aria-hidden="true">&laquo;</span>\
+          </a>\
+        </li>';
 
-        /*console.log("itens_por_pagina", result.itens_por_pagina);
-        console.log("produto", result.produto);
-        console.log("num", result.num);
-        console.log("produtos", result.produtos);
-        console.log("total", result.total);
-        console.log("paginas", result.paginas);*/
+    $('#ul_pagination').html(dataList);
 
-        if(parseInt(result.num) > 0) {
-            
-            $('#tbody-data').html('');
-            
-            // Monta a lista de produtos/itens na tabela alvo
-            $(result.produto).each(function(key, value) {
-                
-                //console.log("produto", "[", key, "]", "=>", value.id, value.descricao, value.valor, value.qtde);
-                
-                var dataTable = "\
-                    <tr>\
-                        <td>"+value.id+"</td>\
-                        <td>"+value.descricao+"</td>\
-                        <td>"+value.valor+"</td>\
-                        <td>"+value.qtde+"</td>\
-                    </tr>";
-
-                $(dataTable).appendTo('#tbody-data');
-            });
-
-            // Para controlar o item ativo da paginacao
-            var style    = '';
-            var dataList = '\
-                <li class="page-item">\
-                  <a data-link-pag-first aria-label="Previous" class="page-link">\
-                    <span aria-hidden="true">&laquo;</span>\
-                  </a>\
-                </li>';
-
-            $('#ul_pagination').html(dataList);
-
-            // Monta a lista de paginacao
-            for(var n = 0; n < result.paginas; n++) {
-                
-                if(index > 0 && (index-1) == n || index == 0 && index == n) {
-                    style = ' class="page-item active"';
-                } else {
-                    style = ' class="page-item"';
-                }
-
-                var dataList = "\
-                    <li"+style+">\
-                        <a data-link-pag class='page-link'>"+(n+1)+"</a>\
-                    </li>";
-
-                $(dataList).appendTo('#ul_pagination');
-
-            }
-
-            dataList = '\
-                <li class="page-item">\
-                  <a data-link-pag-last aria-label="Next" class="page-link">\
-                    <span aria-hidden="true">&raquo;</span>\
-                  </a>\
-                </li>';
-
-            $(dataList).appendTo('#ul_pagination');
-
-            // Ativa o evento do botao que serve para acessar o primeiro indice da lista de paginacao
-            $('[data-link-pag-first]').on("click", function(e){
-                e.preventDefault();
-                getData(0);
-            });
-
-            // Ativa o botao para todos os eventos de paginacao
-            $('[data-link-pag]').on("click", function(e){
-                e.preventDefault();
-                getData($(this).text());
-            });
-
-            // Ativa o evento do botao que serve para acessar o ultimo indice da lista de paginacao
-            $('[data-link-pag-last]').on("click", function(e){
-                e.preventDefault();
-                getData(result.paginas);
-            });
+    // Monta a lista de paginacao
+    for(var n = 0; n < pages; n++) {
+        
+        if(page > 0 && (page-1) == n || page == 0 && page == n) {
+            style = ' class="page-item active"';
+        } else {
+            style = ' class="page-item"';
         }
 
-    }).fail(function(result){
+        var dataList = "\
+            <li"+style+">\
+                <a data-link-pag class='page-link'>"+(n+1)+"</a>\
+            </li>";
 
-        console.error(result);
+        $(dataList).appendTo('#ul_pagination');
+
+    }
+
+    dataList = '\
+        <li class="page-item">\
+          <a data-link-pag-last aria-label="Next" class="page-link">\
+            <span aria-hidden="true">&raquo;</span>\
+          </a>\
+        </li>';
+
+    $(dataList).appendTo('#ul_pagination');
+
+    // Ativa o evento do botao que serve para acessar o primeiro indice da lista de paginacao
+    $('[data-link-pag-first]').on("click", function(e){
+        e.preventDefault();
+        requester(0);
+    });
+
+    // Ativa o botao para todos os eventos de paginacao
+    $('[data-link-pag]').on("click", function(e){
+        e.preventDefault();
+        requester($(this).text());
+    });
+
+    // Ativa o evento do botao que serve para acessar o ultimo indice da lista de paginacao
+    $('[data-link-pag-last]').on("click", function(e){
+        e.preventDefault();
+        requester(pages);
+    });
+
+}
+
+function createTable(params) {
+    
+    $('#tbody-data').html('');
+
+    $(params).each(function(key, value) {
+        
+        var dataTable = "\
+            <tr>\
+                <td>"+value.id+"</td>\
+                <td>"+value.descricao+"</td>\
+                <td>"+value.valor+"</td>\
+                <td>"+value.qtde+"</td>\
+            </tr>";
+
+        $(dataTable).appendTo('#tbody-data');
+
+    });
+
+}
+
+function messeger(msg) {
+    $('#ul_pagination').html("<p class='text-center' style='width: 100%;'>"+msg+"</p>");
+}
+
+function requester(page) {
+
+    $.ajax({
+        
+        type: "GET",
+        url: "http://localhost/testes/pagination/resources/app/response.php",
+        data: "pagina="+page,
+        dataType: "json"
+
+    }).done(function(datadone){
+
+        if(parseInt(datadone.num) > 0) {
+            
+            // Lista de Itens encontrados no base de dados    
+            createTable(datadone.produto);
+
+            // Paginacao dos itens encontrados na base de dados
+            createPagination(datadone.paginas, page);
+
+        } else {
+            
+            messeger("Nenhum registro encontrado !");
+
+        }
+
+    }).fail(function(datafail){
+
+        console.error(datafail);
 
     });
 
 }
 
 window.onload = function() {
-    getData(0);
+    messeger("Carregando...");
+    requester(0);
 }

@@ -4,11 +4,7 @@ header("Content-Type: application/json");
 header("Cache-Control: no-cache, must-revalidate");
 header("Expires: Mon, 26 Jun 2015 05:00:00 GMT");
 
-$server   = "localhost";
-$database = "db_estudos";
-$table    = "tb_produtos";
-$user     = "production";
-$pass     = "123mudar";
+require_once("config.php");
 
 if(isset($_GET['pagina']) && $_GET['pagina'] != "") {
 	
