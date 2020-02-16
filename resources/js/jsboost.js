@@ -14,7 +14,7 @@ const jsBoost = ((selector = "", _global = {}) => {
     }
 
     function currentPage(page) {
-        if(window.settings.page == page) return true
+        if(window.settings.page == page) return true;
     }
 
     function requester(callback) {
