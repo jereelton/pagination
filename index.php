@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>Pagination Template</title>
+<title>Pagination Template Sample</title>
 
 <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" />
 
@@ -24,6 +24,8 @@
 						<td>DESCRIÇÃO</td>
 						<td>VALOR</td>
 						<td>QTDE</td>
+						<td>CRIADO</td>
+						<td>ATUALIZADO</td>
 					</tr>
 				</thead>
 				<tbody id="tbody-data">
@@ -32,17 +34,19 @@
 			</table>
 
 			<nav aria-label="Page navigation">
-
-			  <ul id="ul_pagination" class="pagination justify-content-center" style="margin:20px 0">
-			  	<!--Items-->
-			  </ul>
+				<ul id="ul_pagination" class="pagination justify-content-center" style="margin: 20px 0">
+					<!--Items-->
+				</ul>
 			</nav>
-    	</div>
-    </div>
+		</div>
+	</div>
 </div>
 
 <script src="vendor/jquery/jquery.js"></script>
 <script src="bootstrap/js/bootstrap.min.js"></script>
+<!--script src="resources/js/jsboost-requester.js"></script>
+<script src="resources/js/jsboost-pagination.js"></script-->
+<script src="resources/js/jsboost.js"></script>
 <script src="resources/js/jsapp.js"></script>
 </body>
 </html> 

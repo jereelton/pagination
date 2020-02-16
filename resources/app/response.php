@@ -20,7 +20,7 @@ if(isset($_GET['pagina']) && $_GET['pagina'] != "") {
 	$controle = $conexao->prepare($query);
 	$controle->execute();
 	$produto  = $controle->fetchAll(PDO::FETCH_ASSOC);
-	$num      = $controle->rowCount();
+	$page     = $controle->rowCount();
 
 	$query2    = "SELECT * FROM $database.$table";
 	$controle2 = $conexao->prepare($query2);
@@ -32,7 +32,7 @@ if(isset($_GET['pagina']) && $_GET['pagina'] != "") {
 	$response  = [
 		//"itens_por_pagina" => $itens_por_pagina,
 		"produto"          => $produto,
-		"num"              => $num,
+		"page"             => $pagina,
 		//"produtos"         => $produtos,
 		//"total"            => $total,
 		"paginas"          => $paginas
